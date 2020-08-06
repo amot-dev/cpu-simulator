@@ -11,7 +11,8 @@ public:
 	Memory(int size);
 	~Memory();
 
-	void loadFile(std::string filename);
+	bool loadFile(std::string filename);
+	unsigned getInstruction(int pos);
 
 private:
 	std::string parseInputAsCommand(std::string);
