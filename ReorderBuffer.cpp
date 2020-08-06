@@ -11,9 +11,14 @@ void ReorderBuffer::load(bool valid, unsigned instruction){
 };
 
 void ReorderBuffer::unload(){
-	validities.pop();
+	validities.pop();					//pop oldest value from each queue
 	instructions.pop();
 	ROB_ID.pop();
 };
 
-short ReorderBuffer::getLastROB_ID(){return lastROB_ID;};
+bool ReorderBuffer::empty(){
+	if (ROB_ID.size()) return false;	//since all queues are always pushed at the same time, only need to check one
+	else return true;
+};
+
+short ReorderBuffer::getLastROB_ID(){return ROB_ID.back();};

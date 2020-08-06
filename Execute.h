@@ -6,7 +6,8 @@ public:
 	Execute();
 	~Execute();
 
-	int operation(unsigned opCode, int op1, int op2);
+	int operationInt(unsigned opCode, int op1, int op2);
+	bool operationBool(unsigned opCode, int op1, int op2);
 
 private:
 	int add(int op1, int op2);	//all self-explanatory
