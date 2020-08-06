@@ -11,8 +11,11 @@ public:
 	Memory(int size);
 	~Memory();
 
-	void loadFile(std::string filename);
+	std::string parseInputAsCommand(std::string);
+
 private:
+	void loadFile(std::string filename);
+
 	std::vector<unsigned> instructionMemory;
 };
 

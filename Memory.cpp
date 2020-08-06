@@ -1,6 +1,14 @@
 #include "Memory.h"
 
+Memory::Memory(){};											//the default constructr does nothing - size is handled by the vector directly
 Memory::Memory(int size){instructionMemory.reserve(size);}; //reserve needed amount of memory
+Memory::~Memory(){};
+
+std::string Memory::parseInputAsCommand(std::string input){
+	std::string output = "";
+	for (int i=0; i < input.size();i++) if (input[i] != '.' || input[i] != '/') output += input[i];	//remove the "./" before commands
+	return "samples/" + output + ".csv";
+};
 
 void Memory::loadFile(std::string filename){
 	std::ifstream File;
