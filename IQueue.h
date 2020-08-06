@@ -9,8 +9,8 @@ public:
 	IQueue();
 	~IQueue();
 
-	void load(uint opCode, uint dest, bool valid1, uint src1, bool valid2, uint src2);	//pushes a new set of values to the instruction queue
-	void unload();																		//pops the oldest set of values from the instruction queue
+	void load(uint opCode, uint dest, bool valid1, uint src1, bool valid2, uint src2, short ID);	//pushes a new set of values to the instruction queue
+	void unload();																					//pops the oldest set of values from the instruction queue
 
 private:
 	std::queue<uint> operation;			//stores the operation codes

@@ -5,6 +5,7 @@
 #include "IQueue.h"
 #include "Memory.h"
 #include "RegisterFile.h"
+#include "ReorderBuffer.h"
 
 class Pipeline{
 public:
@@ -24,6 +25,7 @@ private:
 	Memory Mem;
 	RegisterFile RegFile;
 	IQueue IQ;
+	ReorderBuffer ROB;
 };
 
 #endif
