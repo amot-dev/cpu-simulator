@@ -9,8 +9,8 @@ public:
 	IQueue();
 	~IQueue();
 
-	void loadIQueue(short, int, bool, int, bool, int);	//pushes a new set of values to the instruction queue
-	void unloadIQueue();								//pops the oldest set of values from the instruction queue
+	void load(short, int, bool, int, bool, int);	//pushes a new set of values to the instruction queue
+	void unload();									//pops the oldest set of values from the instruction queue
 
 private:
 	std::queue<short> operation;

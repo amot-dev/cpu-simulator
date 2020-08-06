@@ -3,7 +3,7 @@
 IQueue::IQueue(){};
 IQueue::~IQueue(){};
 
-void IQueue::loadIQueue(short opCode, int dest, bool valid1, int src1, bool valid2, int src2){
+void IQueue::load(short opCode, int dest, bool valid1, int src1, bool valid2, int src2){
 	operation.push(opCode);								//push all values given to the various queues
 	destination.push(dest);
 	validA.push(valid1);
@@ -14,7 +14,7 @@ void IQueue::loadIQueue(short opCode, int dest, bool valid1, int src1, bool vali
 	else ROB_ID.push(0);								//if it is the first entry, set the ROB_ID to 0
 };
 
-void IQueue::unloadIQueue(){
+void IQueue::unload(){
 	operation.pop();		//pop oldest value from each queue
 	destination.pop();
 	validA.pop();
