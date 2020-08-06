@@ -1,25 +1,17 @@
 #define DEBUG 1	//enables or disables debug mode
 
 #include <iostream>
-
-#include "Execute.h"
-#include "FetchUnit.h"
-#include "Instruction.h"
-#include "IQueue.h"
-#include "Memory.h"
 #include "Pipeline.h"
-#include "RegisterFile.h"
-#include "Statistics.h"
 
 int main(){
 	std::cout << "Type 'exit' to terminate this application\n";
 
-	Pipeline Pipe;
-	Memory Mem;
-
 	std::string dir = "~/samples";
 	std::string input;
 	while(true){
+
+		Pipeline Pipe;
+
 		std::cout << "user@cpusim:" + dir + "$ ";
 		getline(std::cin, input);
 
@@ -78,7 +70,11 @@ int main(){
 			}
 			else {
 				//here is the actual program now
-				Mem.loadFile(input);	//loads the input file
+				if (Pipe.takeInput(input)) {//while(true){			//if the program specified is valid, execute it
+					//Pipe.commit();
+					//Pipe.execute();
+					Pipe.fetch();
+				}
 			};
 		};
 
