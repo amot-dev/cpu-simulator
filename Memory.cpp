@@ -7,13 +7,11 @@ Memory::~Memory(){};
 bool Memory::loadFile(std::string filename){
 	filename = parseInputAsCommand(filename);		//convert filename input to an actual filename
 	std::ifstream File;
-	File.open(filename);			//attempt to open file
 
-	if (!File){						//if the file was not correctly opened
-		std::cout << "Error in opening file...\n";
-		exit(1);
-	};
-
+	File.open(filename);							//attempt to open file
+	try {if (!File) throw Exception(0);}			//if file not opened, throw exception #0
+	catch(Exception& error){std::cout << error.what();}
+	
 	std::string data;								//temp storage for data read
 	while (getline(File, data, ',')){				//while there are values left to grab, grab them
 		std::string temp = data;data = "";			//move data to a temp string, then empty data

@@ -1,9 +1,11 @@
 #ifndef MEMORY_H
 #define MEMORY_H
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
+#include "Exception.h"
 
 class Memory{
 public:

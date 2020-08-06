@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <bitset>
+#include "Exception.h"
 #include "Execute.h"
 #include "IQueue.h"
 #include "Memory.h"
