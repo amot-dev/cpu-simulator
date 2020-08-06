@@ -1,3 +1,5 @@
+#define DEBUG //comment/uncomment to disable/enable debug mode
+
 #include "Execute.h"
 
 Execute::Execute(){};
@@ -5,19 +7,47 @@ Execute::~Execute(){};
 
 int Execute::operationInt(unsigned opCode, int op1, int op2){
 	switch (opCode){	//depending on opCode, perform a certain operation (break not required since the function returns on each operation)
-		case 0: return add(op1, op2);
-		case 1: return sub(op1, op2);
-		case 2: return mult(op1, op2);
-		case 3: return div(op1, op2);
-		case 4: return mod(op1, op2);
+		case 0: 
+			#ifdef DEBUG
+				std::cout << " : add\n";
+			#endif
+			return add(op1, op2);
+		case 1: 
+			#ifdef DEBUG
+				std::cout << " : sub\n";
+			#endif
+			return sub(op1, op2);
+		case 2: 
+			#ifdef DEBUG
+				std::cout << " : mult\n";
+			#endif
+			return mult(op1, op2);
+		case 3: 
+			#ifdef DEBUG
+				std::cout << " : div\n";
+			#endif
+			return div(op1, op2);
+		case 4: 
+			#ifdef DEBUG
+				std::cout << " : mod\n";
+			#endif
+			return mod(op1, op2);
 		default: return 0;
 	};
 };
 
 bool Execute::operationBool(unsigned opCode, int op1, int op2){
 	switch (opCode){	//depending on opCode, perform a certain operation (break not required since the function returns on each operation)
-		case 5: return BEQ(op1, op2);
-		case 6: return BNE(op1, op2);	
+		case 5: 
+			#ifdef DEBUG
+				std::cout << " : beq\n";
+			#endif
+			return BEQ(op1, op2);
+		case 6: 
+			#ifdef DEBUG
+				std::cout << " : bne\n";
+			#endif
+			return BNE(op1, op2);	
 		default: return 0;
 	};
 };

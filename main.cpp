@@ -1,5 +1,3 @@
-#define DEBUG 1	//enables or disables debug mode
-
 #include <iostream>
 #include "Pipeline.h"
 

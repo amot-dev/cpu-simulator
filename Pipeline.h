@@ -1,6 +1,8 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
+#include <iostream>
+#include <iomanip>
 #include <bitset>
 #include "Execute.h"
 #include "IQueue.h"

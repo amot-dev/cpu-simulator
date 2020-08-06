@@ -1,6 +1,8 @@
 #ifndef EXECUTE_H
 #define EXECUTE_H
 
+#include <iostream>
+
 class Execute{
 public:
 	Execute();
