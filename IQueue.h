@@ -10,7 +10,7 @@ public:
 	~IQueue();
 
 	void load(uint opCode, uint dest, uint src1, uint src2, int immediate, short ID);	//pushes a new set of values to the instruction queue
-	void unload();																		//pops the oldest set of values from the instruction queue
+	void unloadOldest();																//pops the oldest set of values from the instruction queue
 	bool empty();																		//returns true if the instruction queue is empty
 
 	uint getOperation();	//accessor functions
@@ -18,6 +18,7 @@ public:
 	int getSourceA();
 	int getSourceB();
 	int getImmediateVal();
+	short getROB_ID();
 
 private:
 	std::queue<uint> operation;		//stores the operation codes

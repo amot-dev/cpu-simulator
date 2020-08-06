@@ -12,7 +12,7 @@ void IQueue::load(uint opCode, uint dest, uint src1, uint src2, int immediate, s
 	ROB_ID.push(ID);
 };
 
-void IQueue::unload(){
+void IQueue::unloadOldest(){
 	operation.pop();						//pop oldest value from each queue
 	destination.pop();
 	sourceA.pop();
@@ -27,7 +27,8 @@ bool IQueue::empty(){
 };
 
 uint IQueue::getOperation(){return operation.back();};
-int  IQueue::getDestination(){return destination.back();};
-int  IQueue::getSourceA(){return sourceA.back();};
-int  IQueue::getSourceB(){return sourceB.back();};
-int  IQueue::getImmediateVal(){return immediateVal.back();};
+int IQueue::getDestination(){return destination.back();};
+int IQueue::getSourceA(){return sourceA.back();};
+int IQueue::getSourceB(){return sourceB.back();};
+int IQueue::getImmediateVal(){return immediateVal.back();};
+short IQueue::getROB_ID(){return ROB_ID.back();};

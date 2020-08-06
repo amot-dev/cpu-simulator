@@ -4,8 +4,7 @@ Pipeline::Pipeline() : Mem(100){};
 Pipeline::~Pipeline(){};
 
 bool Pipeline::takeInput(std::string input){return Mem.loadFile(input);};
-
-bool Pipeline::stillRunning(){return true;}
+bool Pipeline::stillRunning(){return !ROB.empty();};
 
 void Pipeline::fetch(){
 	if (noFetch) return;													//stops fetching if noFetch is true
@@ -14,7 +13,7 @@ void Pipeline::fetch(){
 	std::bitset<4> opCode;													//create containers for each range of data
 	std::bitset<5> dest, src1, src2;
 
-	ROB.load(false, Mem.getInstruction(programCounter));
+	ROB.load(Mem.getInstruction(programCounter));							//load instructions to ROB
 
 	for (int i = 26; i < 30; i++) opCode[i-26] = instructionBits[i];		//move the opCode bits into their own container
 	for (int i = 21; i < 26; i++) dest[i-21] = instructionBits[i];			//move the dest bits into their own container
@@ -83,4 +82,13 @@ void Pipeline::execute(){
 		RegFile.setRegValidity(IQ.getDestination(), false);		//prevent further writes to destination register this cycle
 	}
 	else if (IQ.getOperation() == 8) std::cout << "Final result is: " << op1 << "\n";				//print operation prints op1 directly to user
+
+	//post operation, it is time to remove the instruction from the IQ and set it as valid in the ROB
+	ROB.setValidity(IQ.getROB_ID());	//set the instruction with the current ROB_ID to valid in the ROB
+	IQ.unloadOldest();					//unload the instructions from the IQ
+};
+
+void Pipeline::commit(){
+	if (ROB.empty()) return;		//if ROB is empty, stop execution
+	ROB.unloadOldestIfValid();		//unload the oldest entry in the ROB if it is valid
 };

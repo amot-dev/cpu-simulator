@@ -70,11 +70,11 @@ int main(){
 			}
 			else {
 				//here is the actual program now
-				if (Pipe.takeInput(input)) {//while(true){			//if the program specified is valid, execute it
-					//Pipe.commit();
-					//Pipe.execute();
+				if (Pipe.takeInput(input)) while(Pipe.stillRunning()){		//if the program specified is valid, execute instructions while there are instructions
+					Pipe.commit();
+					Pipe.execute();
 					Pipe.fetch();
-				}
+				};
 			};
 		};
 
