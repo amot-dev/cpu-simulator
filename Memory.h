@@ -11,8 +11,9 @@ public:
 	Memory(int size);
 	~Memory();
 
-	bool loadFile(std::string filename);
-	unsigned getInstruction(int pos);
+	bool loadFile(std::string filename);	//loads the file given
+	unsigned getInstruction(int pos);		//returns the instructions at a pos
+	bool instructionExists(int pos);		//returns whether or not the specified instruction exists
 
 private:
 	std::string parseInputAsCommand(std::string);

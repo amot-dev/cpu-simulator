@@ -1,6 +1,8 @@
+#define DEBUG //comment/uncomment to disable/enable debug mode
+
 #include "Pipeline.h"
 
-Pipeline::Pipeline() : Mem(100){};
+Pipeline::Pipeline() : Mem(25){};
 Pipeline::~Pipeline(){};
 
 bool Pipeline::takeInput(std::string input){return Mem.loadFile(input);};
@@ -8,7 +10,7 @@ bool Pipeline::stillRunning(){return !ROB.empty();};
 
 void Pipeline::fetch(){
 	if (noFetch) return;													//stops fetching if noFetch is true
-
+	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
 	std::bitset<32> instructionBits(Mem.getInstruction(programCounter));	//convert the current instruction being fetched to bits
 	std::bitset<4> opCode;													//create containers for each range of data
 	std::bitset<5> dest, src1, src2;
@@ -23,6 +25,7 @@ void Pipeline::fetch(){
 		for (int i = 11; i < 16; i++) src2[i-11] = instructionBits[i];		//move the src2 bits into their own container
 		//loads all decoded values to the instruction queue (no immediate value)
 		IQ.load(opCode.to_ulong(), dest.to_ulong(), src1.to_ulong(), src2.to_ulong(), 0, ROB.getLastROB_ID());
+		programCounter++;													//increment program counter (only for R-Type and P-type)
 	}
 	else if (!instructionBits[31] && instructionBits[30]){					//for the I-type
 		std::bitset<30> immediate;											//create an immediate container
@@ -30,16 +33,20 @@ void Pipeline::fetch(){
 		//loads all decoded values to the instruction queue (src2 is set to -1 to tell execute() that an intermediate is needed)
 		IQ.load(opCode.to_ulong(), dest.to_ulong(), src1.to_ulong(), -1, immediate.to_ulong(), ROB.getLastROB_ID());
 		if (opCode.to_ulong() == 5 || opCode.to_ulong() == 6) noFetch = true;	//set noFetch to true if a possible branch is detected
+		programCounter++;													//if no branch, then increment is necessary; if branch, increment doesn't hurt
 	}
 	else if (instructionBits[31] && !instructionBits[30]){					//for the J-type}
 		std::bitset<30> address;											//create an address container
 		for (int i = 0; i < 30; i++) address[i] = instructionBits[i];		//move the address bits into their own container
+		//loads all decoded values to the instruction queue (opcode 10 is for jump, dest is r15 (should not be used), srcs are -1)
+		IQ.load(10, 15, -1, -1, 0, ROB.getLastROB_ID());
 		programCounter = address.to_ulong();								//set the program counter to the jump destination for the next cycle
 	}
 	else if (instructionBits[31] && instructionBits[30]){					//for the P-type}
 		//loads all decoded values to the instruction queue (opcode 9 is for user input, dest is r2, srcs are -1)
 		IQ.load(9, 2, -1, -1, 0, ROB.getLastROB_ID());
-	}
+		programCounter++;
+	};
 };
 
 void Pipeline::execute(){

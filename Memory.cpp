@@ -25,8 +25,13 @@ bool Memory::loadFile(std::string filename){
 
 unsigned Memory::getInstruction(int pos){return instructionMemory[pos];};
 
+bool Memory::instructionExists(int pos){
+	if (pos < instructionMemory.size()) return true;
+	else return false;
+};
+
 std::string Memory::parseInputAsCommand(std::string input){
 	std::string output = "";
-	for (int i=0; i < input.size();i++) if (input[i] != '.' || input[i] != '/') output += input[i];	//remove the "./" before commands
+	for (int i=0; i < input.size();i++) if (input[i] != '.' && input[i] != '/') output += input[i];	//remove the "./" before commands
 	return "samples/" + output + ".csv";
 };
