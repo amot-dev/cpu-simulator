@@ -82,7 +82,7 @@ void Pipeline::execute(){
 		RegFile.setRegValidity(IQ.getDestination(), false);											//prevent further writes to destination register this cycle
 	}
 	else if (IQ.getOperation() == 5 || IQ.getOperation() == 6){
-		if (ALU.operationBool(IQ.getOperation(), op1, op2)) programCounter = IQ.getImmediateVal();	//for BEQ and BNE, if true, jump to address in immediate
+		if (ALU.operationBool(IQ.getOperation(), RegFile.getRegValue(IQ.getDestination()), op1)) programCounter = IQ.getImmediateVal();	//for BEQ and BNE, if true, jump to address in immediate
 	}
 	else if (IQ.getOperation() == 7){
 		RegFile.setRegValue(IQ.getDestination(), op1);			//move op1 directly to the destination register
@@ -98,4 +98,6 @@ void Pipeline::execute(){
 void Pipeline::commit(){
 	if (ROB.empty()) return;		//if ROB is empty, stop execution
 	ROB.unloadOldestIfValid();		//unload the oldest entry in the ROB if it is valid
+	RegFile.validateAll();			//writing is done, so validate all registers for reading
+	noFetch = false;				//execution is complete, so the next set of instructions may be fetched
 };
