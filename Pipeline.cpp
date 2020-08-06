@@ -78,4 +78,9 @@ void Pipeline::execute(){
 	else if (IQ.getOperation() == 5 || IQ.getOperation() == 6){
 		if (ALU.operationBool(IQ.getOperation(), op1, op2)) programCounter = IQ.getImmediateVal();	//for BEQ and BNE, if true, jump to address in immediate
 	}
+	else if (IQ.getOperation() == 7){
+		RegFile.setRegValue(IQ.getDestination(), op1);			//move op1 directly to the destination register
+		RegFile.setRegValidity(IQ.getDestination(), false);		//prevent further writes to destination register this cycle
+	}
+	else if (IQ.getOperation() == 8) std::cout << "Final result is: " << op1 << "\n";				//print operation prints op1 directly to user
 };
