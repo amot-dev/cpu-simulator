@@ -1,6 +1,5 @@
-OBJS	= main.o Execute.o IQueue.o Memory.o Pipeline.o RegisterFile.o ReorderBuffer.o Statistics.o
-SOURCE	= main.cpp Execute.cpp IQueue.cpp Memory.cpp Pipeline.cpp RegisterFile.cpp ReorderBuffer.cpp Statistics.cpp
-HEADER	= Execute.h IQueue.h Memory.h Pipeline.h RegisterFile.h ReorderBuffer.h Statistics.h
+OBJS	= main.o Exception.o Execute.o IQueue.o Memory.o Pipeline.o RegisterFile.o ReorderBuffer.o Statistics.o
+SOURCE	= main.cpp Exception.cpp Execute.cpp IQueue.cpp Memory.cpp Pipeline.cpp RegisterFile.cpp ReorderBuffer.cpp Statistics.cpp
 OUT	    = cpu
 CC	    = g++ -std=c++11
 FLAGS	= -g -c 
@@ -10,6 +9,8 @@ all: $(OBJS)
 
 main.o: main.cpp
 		$(CC) $(FLAGS) main.cpp
+Exception.o: Exception.cpp
+		$(CC) $(FLAGS) Exception.cpp
 Execute.o: Execute.cpp
 		$(CC) $(FLAGS) Execute.cpp
 IQueue.o: IQueue.cpp
