@@ -1,6 +1,6 @@
-OBJS	= main.o Execute.o FetchUnit.o Instruction.o IQueue.o Memory.o Pipeline.o RegisterFile.o ReorderBuffer.o Statistics.o
-SOURCE	= main.cpp Execute.cpp FetchUnit.cpp Instruction.cpp IQueue.cpp Memory.cpp Pipeline.cpp RegisterFile.cpp ReorderBuffer.cpp Statistics.cpp
-HEADER	= Execute.h FetchUnit.h Instruction.h IQueue.h Memory.h Pipeline.h RegisterFile.h ReorderBuffer.h Statistics.h
+OBJS	= main.o Execute.o IQueue.o Memory.o Pipeline.o RegisterFile.o ReorderBuffer.o Statistics.o
+SOURCE	= main.cpp Execute.cpp IQueue.cpp Memory.cpp Pipeline.cpp RegisterFile.cpp ReorderBuffer.cpp Statistics.cpp
+HEADER	= Execute.h IQueue.h Memory.h Pipeline.h RegisterFile.h ReorderBuffer.h Statistics.h
 OUT	    = cpu
 CC	    = g++ -std=c++11
 FLAGS	= -g -c 
@@ -12,10 +12,6 @@ main.o: main.cpp
 		$(CC) $(FLAGS) main.cpp
 Execute.o: Execute.cpp
 		$(CC) $(FLAGS) Execute.cpp
-FetchUnit.o: FetchUnit.cpp
-		$(CC) $(FLAGS) FetchUnit.cpp
-Instruction.o: Instruction.cpp
-		$(CC) $(FLAGS) Instruction.cpp
 IQueue.o: IQueue.cpp
 		$(CC) $(FLAGS) IQueue.cpp
 Memory.o: Memory.cpp
