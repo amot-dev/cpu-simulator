@@ -4,13 +4,8 @@ Memory::Memory(){};											//the default constructr does nothing - size is ha
 Memory::Memory(int size){instructionMemory.reserve(size);}; //reserve needed amount of memory
 Memory::~Memory(){};
 
-std::string Memory::parseInputAsCommand(std::string input){
-	std::string output = "";
-	for (int i=0; i < input.size();i++) if (input[i] != '.' || input[i] != '/') output += input[i];	//remove the "./" before commands
-	return "samples/" + output + ".csv";
-};
-
 void Memory::loadFile(std::string filename){
+	filename = parseInputAsCommand(filename);		//convert filename input to an actual filename
 	std::ifstream File;
 	File.open(filename);			//attempt to open file
 
@@ -25,4 +20,10 @@ void Memory::loadFile(std::string filename){
 		for (int i=0; i < temp.size();i++) if (isdigit(temp[i])) data += temp[i];	//go through data and keep only digits
 		instructionMemory.push_back(stoul(data));	//add the unsigned int to instruction memory
 	};
+};
+
+std::string Memory::parseInputAsCommand(std::string input){
+	std::string output = "";
+	for (int i=0; i < input.size();i++) if (input[i] != '.' || input[i] != '/') output += input[i];	//remove the "./" before commands
+	return "samples/" + output + ".csv";
 };

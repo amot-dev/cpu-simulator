@@ -78,6 +78,7 @@ int main(){
 			}
 			else {
 				//here is the actual program now
+				Mem.loadFile(input);	//loads the input file
 			};
 		};
 
