@@ -65,16 +65,16 @@ int main(){
 				else if (input == "cd ../../..") dir = "/";
 				else{
 					input.erase(0,2);
-					std::cout << "-bash: cd: " + input + ": No such file or directory";
+					std::cout << "-bash: cd: " + input + ": No such file or directory\n";
 				};
 			}
 			else {
 				//here is the actual program now
-				if (Pipe.takeInput(input)) while(Pipe.stillRunning()){		//if the program specified is valid, execute instructions while there are instructions
+				if (Pipe.takeInput(input)) do{		//if the program specified is valid, execute instructions while there are instructions
 					Pipe.commit();
 					Pipe.execute();
 					Pipe.fetch();
-				};
+				}while(Pipe.stillRunning());
 			};
 		};
 
