@@ -2,7 +2,7 @@ OBJS	= main.o Execute.o FetchUnit.o Instruction.o IQueue.o Memory.o Pipeline.o R
 SOURCE	= main.cpp Execute.cpp FetchUnit.cpp Instruction.cpp IQueue.cpp Memory.cpp Pipeline.cpp RegisterFile.cpp Statistics.cpp
 HEADER	= Execute.h FetchUnit.h Instruction.h IQueue.h Memory.h Pipeline.h RegisterFile.h Statistics.h
 OUT	    = cpu
-CC	    = g++
+CC	    = g++ -std=c++11
 FLAGS	= -g -c 
 
 all: $(OBJS)
