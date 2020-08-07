@@ -14,12 +14,13 @@ public:
 	ReorderBuffer();
 	~ReorderBuffer();
 
-	void load(unsigned instruction);				//pushes a new instruction to the ROB
-	void unloadOldestIfValid();						//pops the oldest set of validated instructions from the ROB
-	bool empty();									//returns true if the ROB is empty
+	void load(unsigned instruction);			//pushes a new instruction to the ROB
+	void unloadOldestIfValid();					//pops the oldest set of validated instructions from the ROB
+	bool empty();								//returns true if the ROB is empty
 
-	short getLastROB_ID();							//returns the last ROB_ID inputted into the queue
-	void setValidity(short ID);						//changes validity to true for the specified ID
+	short getLastROB_ID();						//returns the last ROB_ID inputted into the queue
+	std::list<short> getROB_IDs();				//returns all ROB_IDs  (used by stats to see if a set of instructions have finished processing)
+	void setValidity(short ID);					//changes validity to true for the specified ID
 	
 private:
 	std::list<ReorderBufferSet> ROB_SET;

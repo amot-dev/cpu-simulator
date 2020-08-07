@@ -11,6 +11,13 @@ Pipeline::~Pipeline(){};
 bool Pipeline::takeInput(std::string input){return Mem.loadFile(input);};
 bool Pipeline::stillRunning(){return !ROB.empty();};
 
+void Pipeline::doClockCycle(){
+	std::list<short> temp = ROB.getROB_IDs();	//get all ROB_IDs in the buffer
+	for (std::list<short>::iterator it = temp.begin(); it != temp.end(); it++) Stats.incrementLatency(*it);	//for each ID present, increment its latency
+	Stats.pushLatestThroughput();				//store amount of instructions executed during this cycle
+	Stats.incrementCycles();					//go to the next cycle
+};
+
 void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++){				//fetch as many times as the FETCH_WIDTH
 	if (noFetch) return;													//stops fetching if noFetch is true
 	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
@@ -149,6 +156,8 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 			if ((i+1) % 4 == 0) std::cout << "\n";
 		};
 	#endif
+	
+	Stats.incrementLatestThroughput();	//increment throughput for each consecutive execution
 }};
 
 void Pipeline::commit(){for(int w = 0; w < COMMIT_WIDTH; w++){	//commit as many times as the COMMIT_WIDTH

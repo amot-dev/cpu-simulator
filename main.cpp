@@ -72,6 +72,7 @@ int main(){
 					Pipe.commit();
 					Pipe.execute();
 					Pipe.fetch();
+					Pipe.doClockCycle();
 				}while(Pipe.stillRunning());
 			};
 		};
