@@ -1,14 +1,17 @@
 #define DEBUG //comment/uncomment to disable/enable debug mode
+#define FETCH_WIDTH 2
+#define EXECUTE_WIDTH 2
+#define COMMIT_WIDTH 2
 
 #include "Pipeline.h"
 
-Pipeline::Pipeline() : Mem(25){};
+Pipeline::Pipeline() : Mem(estimatedInstructionCount){};
 Pipeline::~Pipeline(){};
 
 bool Pipeline::takeInput(std::string input){return Mem.loadFile(input);};
 bool Pipeline::stillRunning(){return !ROB.empty();};
 
-void Pipeline::fetch(){
+void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++){				//fetch as many times as the FETCH_WIDTH
 	if (noFetch) return;													//stops fetching if noFetch is true
 	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
 	std::bitset<32> instructionBits(Mem.getInstruction(programCounter));	//convert the current instruction being fetched to bits
@@ -63,9 +66,9 @@ void Pipeline::fetch(){
 		IQ.load(9, 2, -1, -1, 0, ROB.getLastROB_ID());
 		programCounter++;
 	};
-};
+};};
 
-void Pipeline::execute(){
+void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as many times as the EXECUTE_WIDTH
 	if (IQ.empty()) return;		//stops executing if there are no instructions to execute
 
 	Execute ALU;				//create an ALU
@@ -146,11 +149,11 @@ void Pipeline::execute(){
 			if ((i+1) % 4 == 0) std::cout << "\n";
 		};
 	#endif
-};
+}};
 
-void Pipeline::commit(){
+void Pipeline::commit(){for(int w = 0; w < COMMIT_WIDTH; w++){	//commit as many times as the COMMIT_WIDTH
 	if (ROB.empty()) return;		//if ROB is empty, stop execution
 	ROB.unloadOldestIfValid();		//unload the oldest entry in the ROB if it is valid
 	RegFile.validateAll();			//writing is done, so validate all registers for reading
 	noFetch = false;				//execution is complete, so the next set of instructions may be fetched
-};
+}};
