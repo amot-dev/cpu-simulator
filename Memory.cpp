@@ -10,7 +10,7 @@ bool Memory::loadFile(std::string filename){
 
 	File.open(filename);							//attempt to open file
 	try {if (!File) throw Exception(0);}			//if file not opened, throw exception #0
-	catch(Exception& error){std::cout << error.what();}
+	catch(Exception error){std::cout << error.what();}
 	
 	std::string data;								//temp storage for data read
 	while (getline(File, data, ',')){				//while there are values left to grab, grab them
