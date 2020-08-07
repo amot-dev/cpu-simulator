@@ -26,9 +26,9 @@ bool IQueue::empty(){
 	else return true;
 };
 
-uint IQueue::getOperation(){return operation.back();};
-int IQueue::getDestination(){return destination.back();};
-int IQueue::getSourceA(){return sourceA.back();};
-int IQueue::getSourceB(){return sourceB.back();};
-int IQueue::getImmediateVal(){return immediateVal.back();};
-short IQueue::getROB_ID(){return ROB_ID.back();};
+uint IQueue::getOperation(){return operation.front();};
+int IQueue::getDestination(){return destination.front();};
+int IQueue::getSourceA(){return sourceA.front();};
+int IQueue::getSourceB(){return sourceB.front();};
+int IQueue::getImmediateVal(){return immediateVal.front();};
+short IQueue::getROB_ID(){return ROB_ID.front();};
