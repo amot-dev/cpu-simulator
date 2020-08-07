@@ -9,8 +9,8 @@ Statistics::Statistics(int size){
 Statistics::~Statistics(){
 	double averageLatency = 0;
 	double averageThroughput = 0;
-	for (std::unordered_map<short,int>::iterator it = latencies.begin(); it != latencies.end(); it++) averageLatency += it->second;
-	for (std::vector<int>::iterator it = throughputs.begin(); it != throughputs.end(); it++) averageThroughput += *it;
+	for (auto it = latencies.begin(); it != latencies.end(); it++) averageLatency += it->second;
+	for (auto it = throughputs.begin(); it != throughputs.end(); it++) averageThroughput += *it;
 	averageLatency = averageLatency/averageThroughput;		//at this point "average" throughput is really just total throughput, which is total instructions
 	averageThroughput = averageThroughput/totalCycles;		//get average instruction throughput per cycle
 	std::cout << "Average latency per instruction: " << averageLatency << "\n";

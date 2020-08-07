@@ -12,4 +12,4 @@ int RegisterFile::getRegValue(int pos){return registers[pos].value;};
 bool RegisterFile::getRegValidity(int pos){return registers[pos].valid;};
 void RegisterFile::setRegValue(int pos, int value){registers[pos].value = value;};
 void RegisterFile::setRegValidity(int pos, bool validity){registers[pos].valid = validity;};
-void RegisterFile::validateAll(){for (std::vector<reg>::iterator it = registers.begin(); it != registers.end(); it++) it->valid = true;};
+void RegisterFile::validateAll(){for (auto it = registers.begin(); it != registers.end(); it++) it->valid = true;};

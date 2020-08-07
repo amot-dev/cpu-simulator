@@ -24,7 +24,8 @@ bool ReorderBuffer::empty(){
 short ReorderBuffer::getLastROB_ID(){return ROB_SET.back().ROB_ID;};
 std::list<short> ReorderBuffer::getROB_IDs(){
 	std::list<short> temp;
-	for (std::list<ReorderBufferSet>::iterator it = ROB_SET.begin(); it != ROB_SET.end(); it++) temp.push_back(it->ROB_ID);
+	for (auto it = ROB_SET.begin(); it != ROB_SET.end(); it++) temp.push_back(it->ROB_ID);
 	return temp;
 };
-void ReorderBuffer::setValidity(short ID){for (std::list<ReorderBufferSet>::iterator it = ROB_SET.begin(); it != ROB_SET.end(); it++) if (it->ROB_ID = ID) it->valid = true;};
+
+void ReorderBuffer::setValidity(short ID){for (auto it = ROB_SET.begin(); it != ROB_SET.end(); it++) if (it->ROB_ID = ID) it->valid = true;};

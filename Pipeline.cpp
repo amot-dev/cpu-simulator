@@ -13,7 +13,7 @@ bool Pipeline::stillRunning(){return !ROB.empty();};
 
 void Pipeline::doClockCycle(){
 	std::list<short> temp = ROB.getROB_IDs();	//get all ROB_IDs in the buffer
-	for (std::list<short>::iterator it = temp.begin(); it != temp.end(); it++) Stats.incrementLatency(*it);	//for each ID present, increment its latency
+	for (auto it = temp.begin(); it != temp.end(); it++) Stats.incrementLatency(*it);	//for each ID present, increment its latency
 	Stats.pushLatestThroughput();				//store amount of instructions executed during this cycle
 	Stats.incrementCycles();					//go to the next cycle
 };
