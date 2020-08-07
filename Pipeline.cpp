@@ -79,6 +79,8 @@ void Pipeline::execute(){
 		#endif
 		std::cout << "Please enter a parameter: ";
 		std::cin >> op1;
+		try {if (std::cin.fail() || op1 <= 0) throw Exception(2);}	//throw exception if input is not an integer or is <= 0
+		catch(Exception error){std::cout << error.what();op1 = 1;}	//catch exception and set op1 to default of 1
 		std::cin.clear();					//clear cin buffer (for getline in main.cpp)
       	std::cin.ignore(10000,'\n');
 		RegFile.setRegValue(2, op1);		//set r2 to op1
