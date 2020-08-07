@@ -94,7 +94,7 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 		std::cin.clear();					//clear cin buffer (for getline in main.cpp)
       	std::cin.ignore(10000,'\n');
 		RegFile.setRegValue(2, op1);		//set r2 to op1
-		RegFile.setRegValidity(2, false);	//prevent further writes to r2 this cycle
+		RegFile.setRegValidity(2, false);	//prevent further reads from r2 this cycle
 	}
 	else {				
 		if (RegFile.getRegValidity(IQ.getSourceA())){
@@ -127,7 +127,7 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 	//now that op1 and op2 are set, it's time to figure out the operation
 	if (IQ.getOperation() >= 0 && IQ.getOperation() < 5){
 		RegFile.setRegValue(IQ.getDestination(),ALU.operationInt(IQ.getOperation(), op1, op2));		//complete operation and store in destination register
-		RegFile.setRegValidity(IQ.getDestination(), false);											//prevent further writes to destination register this cycle
+		RegFile.setRegValidity(IQ.getDestination(), false);											//prevent further reads from destination register this cycle
 	}
 	else if (IQ.getOperation() == 5 || IQ.getOperation() == 6){
 		if (ALU.operationBool(IQ.getOperation(), RegFile.getRegValue(IQ.getDestination()), op1)) programCounter = IQ.getImmediateVal();	//for BEQ and BNE, if true, jump to address in immediate
@@ -137,7 +137,7 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 			std::cout << ": mov\n";
 		#endif
 		RegFile.setRegValue(IQ.getDestination(), op1);			//move op1 directly to the destination register
-		RegFile.setRegValidity(IQ.getDestination(), false);		//prevent further writes to destination register this cycle
+		RegFile.setRegValidity(IQ.getDestination(), false);		//prevent further reads from destination register this cycle
 	}
 	else if (IQ.getOperation() == 8){
 		#ifdef DEBUG
