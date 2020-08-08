@@ -1,0 +1,36 @@
+# A """fun""" game to play with a friend
+# One friend inputs 4 integers and the other has to make a guess that matches one of those inputs
+# If they guess correctly, the program tells them which input their guess matched
+# If they don't guess correctly, they must guess again
+
+[00]prompt user for r2		11000000010000000000000000000000	# Get input 1
+[01]move r2 to r7			00011100111000100000000000000000	# Store input 1
+[02]prompt user for r2		11000000010000000000000000000000	# Get input 2
+[03]move r2 to r8			00011101000000100000000000000000	# Store input 2
+[04]prompt user for r2		11000000010000000000000000000000	# Get input 3
+[05]move r2 to r9			00011101001000100000000000000000	# Store input 3
+[06]prompt user for r2		11000000010000000000000000000000	# Get input 4
+[07]move r2 to r10			00011101010000100000000000000000	# Store input 4
+[08]prompt user for r2		11000000010000000000000000000000	# Get guess
+[09]move r2 to r5			00011100101000100000000000000000	# Store guess
+
+[10]beq r5 r7 to 15			01010100101001110000000000001111	# If guess matches input 1, branch to 15
+[11]beq r5 r8 to 17			01010100101010000000000000010001	# If guess matches input 2, branch to 17
+[12]beq r5 r9 to 19			01010100101010010000000000010011	# If guess matches input 3, branch to 19
+[13]beq r5 r10 to 21		01010100101010100000000000010101	# If guess matches input 4, branch to 21
+
+[14]jump to 0				10000000000000000000000000001000	# If guess did not match any input, branch to 8 (to get another guess)
+
+[15]set r6 to 1				01000000110000000000000000000001	# If guess matched input 1 (branched here from 10) set r6 to 1
+[16]jump to 23				10000000000000000000000000010111	# jump to 23 (final line)
+
+[17]set r6 to 2				01000000110000000000000000000010	# If guess matched input 2 (branched here from 11) set r6 to 2
+[18]jump to 23				10000000000000000000000000010111	# jump to 23 (final line)
+
+[19]set r6 to 3				01000000110000000000000000000011	# If guess matched input 3 (branched here from 12) set r6 to 3
+[20]jump to 23				10000000000000000000000000010111	# jump to 23 (final line)
+
+[21]set r6 to 4				01000000110000000000000000000100	# If guess matched input 4 (branched here from 13) set r6 to 4
+[22]jump to 23				10000000000000000000000000010111	# jump to 23 (final line)
+
+[23]output r6				00100000110001100000000000000000	# Output r6 (the input which matched the guess)
