@@ -101,7 +101,12 @@ void Pipeline::execute(){
 	int op2;
 
 	//load op1 and op2
-	if (IQ.getSourceA() == -1 && IQ.getOperation() != 10){		//if source A is -1, (and opcode is not jump) then user input is required (source B does not matter)
+	if (IQ.getOperation() == 10){									//if a jump is detected, skip to the end of execute() for it to be removed from the ROB
+		#ifdef DEBUG
+			std::cout << "\033[31mExecuting\033[0m ROB_ID[" << IQ.getROB_ID() << "] (jump)\n";
+		#endif
+	}
+	else if (IQ.getSourceA() == -1 && IQ.getOperation() != 10){		//if source A is -1, (and opcode is not jump) then user input is required (source B does not matter)
 		#ifdef DEBUG
 			std::cout << "\033[31mExecuting\033[0m ROB_ID[" << IQ.getROB_ID() << "] (r2 : param)\n";
 		#endif
