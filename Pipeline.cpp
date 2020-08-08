@@ -24,7 +24,7 @@ void Pipeline::printCycleDebug(){
 	#endif
 };
 
-void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (w < IQ.size()) {	//fetch as many times as min(FETCH_WIDTH, IQ.size())
+void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (IQ.size() < FETCH_WIDTH) {	//fetch as many times as min(FETCH_WIDTH, IQ.size())
 	if (noFetch) return;													//stops fetching if noFetch is true
 	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
 	std::bitset<32> instructionBits(Mem.getInstruction(programCounter));	//convert the current instruction being fetched to bits
