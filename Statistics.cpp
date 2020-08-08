@@ -9,7 +9,7 @@ Statistics::Statistics(int size){
 Statistics::~Statistics(){
 	double averageLatency = 0;
 	double averageThroughput = 0;
-	for (auto it = latencies.begin(); it != latencies.end(); it++) averageLatency += it->second;
+	for (auto it = latencies.begin(); it != latencies.end(); it++) averageLatency += (it->second + 1);	//add 1 due to lack of increment on commit cycle
 	for (auto it = throughputs.begin(); it != throughputs.end(); it++) averageThroughput += *it;
 	averageLatency = averageLatency/averageThroughput;		//at this point "average" throughput is really just total throughput, which is total instructions
 	averageThroughput = averageThroughput/(totalCycles-2);	//get average executions per cycle (-2 because there are never executions in the first or last cycle)
@@ -21,7 +21,7 @@ Statistics::~Statistics(){
 
 int Statistics::getCycle(){return totalCycles;};
 void Statistics::incrementCycles(){totalCycles++;};
-void Statistics::incrementLatency(short ROB_ID){latencies[ROB_ID] += 1;};
+void Statistics::incrementLatency(short ROB_ID){latencies[ROB_ID]++;std::cout << "ROB: " << ROB_ID << " LAT: " << latencies[ROB_ID] << "\n";};
 void Statistics::incrementLatestThroughput(){latestThroughput++;};
 
 void Statistics::pushLatestThroughput(){
