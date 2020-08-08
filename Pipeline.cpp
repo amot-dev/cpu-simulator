@@ -1,7 +1,7 @@
 #define DEBUG //comment/uncomment to disable/enable debug mode
-#define FETCH_WIDTH 2
-#define EXECUTE_WIDTH 2
-#define COMMIT_WIDTH 2
+#define FETCH_WIDTH 8
+#define EXECUTE_WIDTH 8
+#define COMMIT_WIDTH 8
 
 #include "Pipeline.h"
 
@@ -9,7 +9,7 @@ Pipeline::Pipeline() : Mem(estimatedInstructionCount){};
 Pipeline::~Pipeline(){};
 
 bool Pipeline::takeInput(std::string input){return Mem.loadFile(input);};
-bool Pipeline::stillRunning(){return !ROB.empty();};
+bool Pipeline::stillRunning(){return ROB.size();};
 
 void Pipeline::doClockCycle(){
 	std::list<short> temp = ROB.getROB_IDs();	//get all ROB_IDs in the buffer
@@ -20,13 +20,22 @@ void Pipeline::doClockCycle(){
 
 void Pipeline::printCycleDebug(){
 	#ifdef DEBUG
-		std::cout << "\n\033[32m==== Clock Cycle " << Stats.getCycle() << " ====\033[0m\n";
+		std::cout << "\n\033[1m\033[32m======== Clock Cycle #" << Stats.getCycle() << " ========\033[0m\n";
 	#endif
 };
 
-void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (IQ.size() < FETCH_WIDTH) {	//fetch as many times as min(FETCH_WIDTH, IQ.size())
-	if (noFetch) return;													//stops fetching if noFetch is true
-	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
+void Pipeline::fetch(){
+	#ifdef DEBUG
+		std::cout << "\033[32mEntering\033[0m Fetch phase\n";
+	#endif
+	for(int w = 0; w < FETCH_WIDTH; w++) if (IQ.size() < FETCH_WIDTH) {		//fetch as many times as min(FETCH_WIDTH, IQ.size()) (I didn't indent on purpose)
+	if (noFetch || !Mem.instructionExists(programCounter)){
+		#ifdef DEBUG
+			if (w == 0) std::cout << "\033[35mNothing\033[0m to fetch\n";
+		#endif
+		return;																//stops fetching if noFetch is true or if the specified instruction does not exist
+	};
+
 	std::bitset<32> instructionBits(Mem.getInstruction(programCounter));	//convert the current instruction being fetched to bits
 	std::bitset<4> opCode;													//create containers for each range of data
 	std::bitset<5> dest, src1, src2;
@@ -53,7 +62,12 @@ void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (IQ.size() < FETC
 		for (int i = 0; i < 16; i++) immediate[i] = instructionBits[i];		//move the immediate bits into their own container
 		//loads all decoded values to the instruction queue (src2 is set to -1 to tell execute() that an intermediate is needed)
 		IQ.load(opCode.to_ulong(), dest.to_ulong(), src1.to_ulong(), -1, immediate.to_ulong(), ROB.getLastROB_ID());
-		if (opCode.to_ulong() == 5 || opCode.to_ulong() == 6) noFetch = true;	//set noFetch to true if a possible branch is detected
+		if (opCode.to_ulong() == 5 || opCode.to_ulong() == 6){
+			#ifdef DEBUG
+				std::cout << "\033[35mWaiting\033[0m for possible branch outcome\n";
+			#endif
+			noFetch = true;	//set noFetch to true if a possible branch is detected
+		}
 		programCounter++;													//if no branch, then increment is necessary; if branch, increment doesn't hurt
 	}
 	else if (instructionBits[31] && !instructionBits[30]){					//for the J-type}
@@ -70,11 +84,20 @@ void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (IQ.size() < FETC
 	};
 };};
 
-void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as many times as the EXECUTE_WIDTH
-	if (!IQ.size()) return;		//stops executing if there are no instructions to execute
+void Pipeline::execute(){
+	#ifdef DEBUG
+		std::cout << "\033[32mEntering\033[0m Execute phase\n";
+	#endif
+	for(int w = 0; w < EXECUTE_WIDTH; w++){						//execute as many times as the EXECUTE_WIDTH (I didn't indent on purpose)
+	if (!IQ.size()){
+		#ifdef DEBUG
+			if (w == 0) std::cout << "\033[35mNothing\033[0m to execute\n";
+		#endif
+		return;													//stops executing if there are no instructions to execute
+	};
 
-	Execute ALU;				//create an ALU
-	int op1;					//create the operators
+	Execute ALU;	//create an ALU
+	int op1;		//create the operators
 	int op2;
 
 	//load op1 and op2
@@ -91,15 +114,26 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 		RegFile.setRegValue(2, op1);		//set r2 to op1
 		RegFile.setRegValidity(2, false);	//prevent further reads from r2 this cycle
 	}
-	else {				
-		if (RegFile.getRegValidity(IQ.getSourceA())){
+	else {
+		if (!RegFile.getRegValidity(IQ.getDestination()) && (IQ.getOperation() == 5 || IQ.getOperation() == 6)){
+			#ifdef DEBUG
+				std::cout << "\033[35mWaiting\033[0m for r" << IQ.getDestination() << " to be valid for read\n";
+			#endif
+			noFetch = true;return;			//if not valid, stop fetching new instructions and stop executing
+		}
+		else if (RegFile.getRegValidity(IQ.getSourceA())){
 			#ifdef DEBUG
 				std::cout << "\033[31mExecuting\033[0m ROB_ID[" << IQ.getROB_ID() << "] (r" << IQ.getDestination();
 				if (IQ.getOperation() != 8) std::cout << ", r" << IQ.getSourceA();
 			#endif
 			op1 = RegFile.getRegValue(IQ.getSourceA());		//if source A is not -1, it is safe to its register into op1 if valid	
 		}
-		else {noFetch = true;return;}	//if not valid, stop fetching new instructions and stop executing
+		else {
+			#ifdef DEBUG
+				std::cout << "\033[35mWaiting\033[0m for r" << IQ.getSourceA() << " to be valid for read\n";
+			#endif
+			noFetch = true;return;			//if not valid, stop fetching new instructions and stop executing
+		}		
 
 		if (IQ.getSourceB() == -1){
 			if (IQ.getOperation() != 5 && IQ.getOperation() != 6){
@@ -107,7 +141,7 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 					std::cout << ", i";
 				#endif
 			};
-			op2 = IQ.getImmediateVal();	//if source B is -1, op2 is an immediate
+			op2 = IQ.getImmediateVal();		//if source B is -1, op2 is an immediate
 		}
 		else {					
 			if (RegFile.getRegValidity(IQ.getSourceB())){
@@ -116,9 +150,15 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 				#endif	
 				op2 = RegFile.getRegValue(IQ.getSourceB());	//if source B is not -1, it is safe to put its register into op2 if valid	
 			}
-			else {noFetch = true;return;}	//if not valid, stop fetching new instructions and stop executing
+			else {
+				#ifdef DEBUG
+					std::cout << "\033[35mWaiting\033[0m for r" << IQ.getSourceB() << " to be valid for read\n";
+				#endif
+				noFetch = true;return;		//if not valid, stop fetching new instructions and stop executing
+			}	
 		};
 	};
+
 	//now that op1 and op2 are set, it's time to figure out the operation
 	if (IQ.getOperation() >= 0 && IQ.getOperation() < 5){
 		RegFile.setRegValue(IQ.getDestination(),ALU.operationInt(IQ.getOperation(), op1, op2));		//complete operation and store in destination register
@@ -142,6 +182,9 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 	};
 
 	//post operation, it is time to remove the instruction from the IQ and set it as valid in the ROB
+	#ifdef DEBUG
+		std::cout << "\033[34mValidating\033[0m ROB_ID[" << IQ.getROB_ID() << "]\n";
+	#endif
 	ROB.setValidity(IQ.getROB_ID());	//set the instruction with the current ROB_ID to valid in the ROB
 	IQ.unloadOldest();					//unload the instructions from the IQ
 	#ifdef DEBUG
@@ -156,9 +199,19 @@ void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as man
 	Stats.incrementLatestThroughput();	//increment throughput for each consecutive execution
 }};
 
-void Pipeline::commit(){for(int w = 0; w < COMMIT_WIDTH; w++){	//commit as many times as the COMMIT_WIDTH
-	if (ROB.empty()) return;		//if ROB is empty, stop execution
-	ROB.unloadOldestIfValid();		//unload the oldest entry in the ROB if it is valid
-	RegFile.validateAll();			//writing is done, so validate all registers for reading
-	noFetch = false;				//execution is complete, so the next set of instructions may be fetched
+void Pipeline::commit(){
+	#ifdef DEBUG
+		std::cout << "\033[32mEntering\033[0m Commit phase\n";
+	#endif
+	for(int w = 0; w < COMMIT_WIDTH; w++){	//commit as many times as the COMMIT_WIDTH (I didn't indent on purpose)
+	if (!ROB.size()){
+		#ifdef DEBUG
+			if (w == 0) std::cout << "\033[35mNothing\033[0m to commit\n";
+		#endif
+		return;								//if ROB is empty, stop execution
+	};
+
+	ROB.unloadOldestIfValid();				//unload the oldest entry in the ROB if it is valid
+	RegFile.validateAll();					//writing is done, so validate all registers for reading
+	noFetch = false;						//execution is complete, so the next set of instructions may be fetched
 }};

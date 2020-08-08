@@ -9,8 +9,7 @@ void ReorderBuffer::load(unsigned instruction){
 	ReorderBufferSet loader;										//create temporary struct to assign all values
 	loader.valid = false;											//instruction has not been executed if it is being loaded
 	loader.instruction = instruction;
-	if (ROB_SET.size()) loader.ROB_ID = ROB_SET.back().ROB_ID + 1;	//if this is not the first entry, set the ROB_ID to 1 greater than the previous ROB_ID
-	else loader.ROB_ID = 0;											//if it is the first entry, set the ROB_ID to 0
+	loader.ROB_ID = ROB_IDCounter++;								//set the ROB_ID to the ROB_ID counter, then increment counter
 	ROB_SET.push_back(loader);										//push back temporary struct to ROB_SET
 };
 
@@ -20,13 +19,10 @@ void ReorderBuffer::unloadOldestIfValid(){
 			std::cout << "\033[34mComitting\033[0m ROB_ID[" << ROB_SET.front().ROB_ID << "]\n";
 		#endif
 		ROB_SET.pop_front();					//if the oldest instruction is validated, pop it
-	}
+	};
 };
 
-bool ReorderBuffer::empty(){
-	if (ROB_SET.size()) return false;	//check if ROB is empty and return true if it is
-	else return true;
-};
+int ReorderBuffer::size(){return ROB_SET.size();};
 
 short ReorderBuffer::getLastROB_ID(){return ROB_SET.back().ROB_ID;};
 std::list<short> ReorderBuffer::getROB_IDs(){
@@ -35,4 +31,4 @@ std::list<short> ReorderBuffer::getROB_IDs(){
 	return temp;
 };
 
-void ReorderBuffer::setValidity(short ID){for (auto it = ROB_SET.begin(); it != ROB_SET.end(); it++) if (it->ROB_ID = ID) it->valid = true;};
+void ReorderBuffer::setValidity(short ID){for (auto it = ROB_SET.begin(); it != ROB_SET.end(); it++) if (it->ROB_ID == ID) it->valid = true;};
