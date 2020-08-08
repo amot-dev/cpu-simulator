@@ -23,7 +23,7 @@ public:
 	std::list<short> getROB_IDs();				//returns all ROB_IDs  (used by stats to see if a set of instructions have finished processing)
 	void setValidity(short ID);					//changes validity to true for the specified ID
 	
-//private:
+private:
 	short ROB_IDCounter = 0;
 	std::list<ReorderBufferSet> ROB_SET;
 };
