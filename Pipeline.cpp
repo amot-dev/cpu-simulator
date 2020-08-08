@@ -1,4 +1,4 @@
-#define DEBUG //comment/uncomment to disable/enable debug mode
+//#define DEBUG //uncomment to enable debug mode (also in Execute.cpp and ReorderBuffer.cpp)
 #define FETCH_WIDTH 8
 #define EXECUTE_WIDTH 8
 #define COMMIT_WIDTH 8

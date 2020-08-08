@@ -1,4 +1,4 @@
-#define DEBUG //comment/uncomment to disable/enable debug mode
+//#define DEBUG //uncomment to enable debug mode (also in Pipeline.cpp and ReorderBuffer.cpp)
 
 #include "Execute.h"
 
