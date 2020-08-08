@@ -18,6 +18,12 @@ void Pipeline::doClockCycle(){
 	Stats.incrementCycles();					//go to the next cycle
 };
 
+void Pipeline::printCycleDebug(){
+	#ifdef DEBUG
+		std::cout << "\n\033[32m==== Clock Cycle " << Stats.getCycle() << " ====\033[0m\n";
+	#endif
+};
+
 void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++){				//fetch as many times as the FETCH_WIDTH
 	if (noFetch) return;													//stops fetching if noFetch is true
 	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist

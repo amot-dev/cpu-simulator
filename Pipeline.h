@@ -20,6 +20,7 @@ public:
 	bool takeInput(std::string);	//loads the program to instructions memory if valid
 	bool stillRunning();			//checks if there are still instructions to execute
 	void doClockCycle();			//performs necessarry actions on each clock cycle
+	void printCycleDebug();			//prints the debug for cycle number
 
 	void fetch();					//fetches instructions from memory and decodes them to the IQ and ROB
 	void execute();					//executes instructions from the IQ, then removes them
