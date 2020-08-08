@@ -11,6 +11,7 @@ public:
 	Statistics(int size);
 	~Statistics();
 
+	int getCycle();							//returns the current clock cycle
 	void incrementCycles();					//increments the clock
 	void incrementLatency(short ROB_ID);	//increments the latency associated with the given ROB_ID by 1
 	void incrementLatestThroughput();		//increment latestThroughput by one (executed for each instruction passed through execute() in a cycle)

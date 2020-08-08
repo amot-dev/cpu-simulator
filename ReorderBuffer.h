@@ -1,6 +1,7 @@
 #ifndef REORDERBUFFER_H
 #define REORDERBUFFER_H
 
+#include <iostream>
 #include <list>
 
 struct ReorderBufferSet{

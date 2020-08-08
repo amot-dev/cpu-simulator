@@ -1,3 +1,5 @@
+#define DEBUG //comment/uncomment to disable/enable debug mode
+
 #include "ReorderBuffer.h"
 
 ReorderBuffer::ReorderBuffer(){};
@@ -13,7 +15,12 @@ void ReorderBuffer::load(unsigned instruction){
 };
 
 void ReorderBuffer::unloadOldestIfValid(){
-	if (ROB_SET.front().valid) ROB_SET.pop_front();					//if the oldest instruction is validated, pop it
+	if (ROB_SET.front().valid){
+		#ifdef DEBUG
+			std::cout << "\033[34mComitting\033[0m ROB_ID[" << ROB_SET.front().ROB_ID << "]\n";
+		#endif
+		ROB_SET.pop_front();					//if the oldest instruction is validated, pop it
+	}
 };
 
 bool ReorderBuffer::empty(){

@@ -19,9 +19,11 @@ Statistics::~Statistics(){
 	};
 };
 
+int Statistics::getCycle(){return totalCycles;};
 void Statistics::incrementCycles(){totalCycles++;};
 void Statistics::incrementLatency(short ROB_ID){latencies[ROB_ID] += 1;};
 void Statistics::incrementLatestThroughput(){latestThroughput++;};
+
 void Statistics::pushLatestThroughput(){
 	throughputs.push_back(latestThroughput);	//store latestThroughput
 	latestThroughput = 0;						//reset it to 0 for the next cycle
