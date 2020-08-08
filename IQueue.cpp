@@ -21,10 +21,7 @@ void IQueue::unloadOldest(){
 	ROB_ID.pop();
 };
 
-bool IQueue::empty(){
-	if (ROB_ID.size()) return false;		//since all queues are always pushed at the same time, only need to check one
-	else return true;
-};
+int IQueue::size(){return ROB_ID.size();};	//since all queues are always pushed at the same time, only need to check one
 
 uint IQueue::getOperation(){return operation.front();};
 int IQueue::getDestination(){return destination.front();};

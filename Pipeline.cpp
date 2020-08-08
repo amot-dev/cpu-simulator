@@ -24,7 +24,7 @@ void Pipeline::printCycleDebug(){
 	#endif
 };
 
-void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++){				//fetch as many times as the FETCH_WIDTH
+void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++) if (w < IQ.size()) {	//fetch as many times as min(FETCH_WIDTH, IQ.size())
 	if (noFetch) return;													//stops fetching if noFetch is true
 	if (!Mem.instructionExists(programCounter)) return;						//stops fetching if the specified instruction does not exist
 	std::bitset<32> instructionBits(Mem.getInstruction(programCounter));	//convert the current instruction being fetched to bits
@@ -71,7 +71,7 @@ void Pipeline::fetch(){for(int w = 0; w < FETCH_WIDTH; w++){				//fetch as many 
 };};
 
 void Pipeline::execute(){for(int w = 0; w < EXECUTE_WIDTH; w++){//execute as many times as the EXECUTE_WIDTH
-	if (IQ.empty()) return;		//stops executing if there are no instructions to execute
+	if (!IQ.size()) return;		//stops executing if there are no instructions to execute
 
 	Execute ALU;				//create an ALU
 	int op1;					//create the operators
