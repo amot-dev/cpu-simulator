@@ -21,7 +21,7 @@ Statistics::~Statistics(){
 
 int Statistics::getCycle(){return totalCycles;};
 void Statistics::incrementCycles(){totalCycles++;};
-void Statistics::incrementLatency(short ROB_ID){latencies[ROB_ID]++;std::cout << "ROB: " << ROB_ID << " LAT: " << latencies[ROB_ID] << "\n";};
+void Statistics::incrementLatency(short ROB_ID){latencies[ROB_ID]++;};
 void Statistics::incrementLatestThroughput(){latestThroughput++;};
 
 void Statistics::pushLatestThroughput(){
